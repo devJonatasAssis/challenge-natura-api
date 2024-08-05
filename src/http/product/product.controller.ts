@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Query,
   UploadedFile,
@@ -39,5 +40,11 @@ export class ProductController {
   async getAllProducts(@Query() queryParams) {
     const { category } = queryParams;
     return this.productService.getProducts({ category });
+  }
+
+  @Get('/:id')
+  async getProductById(@Param() params) {
+    const { id } = params;
+    return this.productService.getProductById(id);
   }
 }

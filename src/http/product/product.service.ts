@@ -49,4 +49,21 @@ export class ProductService {
       console.error(error);
     }
   }
+
+  async getProductById(id: string) {
+    try {
+      const product = await this.prismaService.product.findFirst({
+        where: {
+          id,
+        },
+      });
+
+      return {
+        ...product,
+        image: `https://bucket-natura-s3.s3.amazonaws.com/${product.image}`,
+      };
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
