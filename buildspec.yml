@@ -1,0 +1,31 @@
+version: 0.2
+
+env:
+  variables:
+    DATABASE_URL: 'postgresql://postgres:devsisamhil2506@database.cnyy0my4oo7l.us-east-1.rds.amazonaws.com/conectaplantao'
+    PORT: 3000
+    JWT_CHECK_IN_TOKEN_SECRET: '5aO2cKOz3UHbhSLpIJx0ZA39iXMydC1fZk9SLV7g'
+    JWT_REFRESH_TOKEN_SECRET: 'EieM8z9v1VgrqEwcCi9pfYmwcMb6'
+    JWT_ACCESS_TOKEN_SECRET: 'KQ7WJ8MY4Xq7TGPCCxlSPqldKBApE1dbd0JLJAmg'
+    AWS_S3_REGION: 'us-east-1'
+    AWS_ACCESS_KEY_ID:
+    AWS_SECRET_ACCESS_KEY:
+    CFM_API_KEY: 'HKXZ5POM'
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - npm i -g yarn
+      - npm i -g typescript
+      - npm i -g @nestjs/cli
+  build:
+    commands:
+      - yarn
+      - yarn prebuild
+      - yarn build
+
+artifacts:
+  files:
+    - '**/*'
