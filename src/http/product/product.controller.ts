@@ -38,8 +38,12 @@ export class ProductController {
 
   @Get()
   async getAllProducts(@Query() queryParams) {
-    const { category } = queryParams;
-    return this.productService.getProducts({ category });
+    const { name, skip = 0, take = 10 } = queryParams;
+    return this.productService.getProducts({
+      name,
+      skip: Number(skip),
+      take: Number(take),
+    });
   }
 
   @Get('/:id')

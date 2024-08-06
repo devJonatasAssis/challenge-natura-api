@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { $Enums, Product } from '@prisma/client';
+import { Product } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { HelperUpload } from 'src/shared/helpers';
 
 interface IFilterGetProducts {
-  category?: $Enums.Category;
+  name?: string;
+  skip?: number;
+  take?: number;
 }
 
 @Injectable()
@@ -33,18 +35,38 @@ export class ProductService {
     }
   }
 
-  async getProducts({ category }: IFilterGetProducts) {
+  async getProducts({ name, skip = 0, take = 10 }: IFilterGetProducts) {
     try {
-      const find = await this.prismaService.product.findMany({
-        where: {
-          category,
-        },
-      });
+      let whereClausule: any = {};
 
-      return find.map((item) => ({
-        ...item,
-        image: `https://bucket-natura-s3.s3.amazonaws.com/${item.image}`,
-      }));
+      if (name && name !== '') {
+        whereClausule = {
+          ...whereClausule,
+          name: {
+            contains: name,
+            mode: 'insensitive',
+          },
+        };
+      }
+
+      const [products, total] = await this.prismaService.$transaction([
+        this.prismaService.product.findMany({
+          where: whereClausule,
+          skip,
+          take,
+        }),
+        this.prismaService.product.count({
+          where: whereClausule,
+        }),
+      ]);
+
+      return {
+        products: products.map((item) => ({
+          ...item,
+          image: `https://bucket-natura-s3.s3.amazonaws.com/${item.image}`,
+        })),
+        total,
+      };
     } catch (error) {
       console.error(error);
     }
