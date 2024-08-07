@@ -14,80 +14,68 @@ export class ProductService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async createProduct(payload: Product) {
-    try {
-      const helperUpload = new HelperUpload();
+    const helperUpload = new HelperUpload();
 
-      const image = await helperUpload.saveFileS3Storage(payload.image);
+    const image = await helperUpload.saveFileS3Storage(payload.image);
 
-      const product = await this.prismaService.product.create({
-        data: {
-          ...payload,
-          image,
-          price: Number(payload.price),
-          isLaunch: Boolean(payload.isLaunch),
-          currentStock: Number(payload.currentStock),
-        },
-      });
+    const product = await this.prismaService.product.create({
+      data: {
+        ...payload,
+        image,
+        price: Number(payload.price),
+        isLaunch: Boolean(payload.isLaunch),
+        currentStock: Number(payload.currentStock),
+      },
+    });
 
-      return product;
-    } catch (error) {
-      console.error(error);
-    }
+    return product;
   }
 
   async getProducts({ name, skip = 0, take = 10 }: IFilterGetProducts) {
-    try {
-      let whereClausule: any = {};
+    let whereClausule: any = {};
 
-      if (name && name !== '') {
-        whereClausule = {
-          ...whereClausule,
-          name: {
-            contains: name,
-            mode: 'insensitive',
-          },
-        };
-      }
-
-      const [products, total] = await this.prismaService.$transaction([
-        this.prismaService.product.findMany({
-          where: whereClausule,
-          skip,
-          take,
-        }),
-        this.prismaService.product.count({
-          where: whereClausule,
-        }),
-      ]);
-
-      return {
-        products: products.map((item) => ({
-          ...item,
-          image: `https://bucket-natura-s3.s3.amazonaws.com/${item.image}`,
-        })),
-        total,
-        nextCursor:
-          skip + products.length < total ? skip + products.length : undefined,
+    if (name && name !== '') {
+      whereClausule = {
+        ...whereClausule,
+        name: {
+          contains: name,
+          mode: 'insensitive',
+        },
       };
-    } catch (error) {
-      console.error(error);
     }
+
+    const [products, total] = await this.prismaService.$transaction([
+      this.prismaService.product.findMany({
+        where: whereClausule,
+        skip,
+        take,
+      }),
+      this.prismaService.product.count({
+        where: whereClausule,
+      }),
+    ]);
+
+    return {
+      products: products.map((item) => ({
+        ...item,
+        image: `https://bucket-natura-s3.s3.amazonaws.com/${item.image}`,
+      })),
+      total,
+      nextCursor:
+        skip + products.length < total ? skip + products.length : undefined,
+    };
   }
 
   async getProductById(id: string) {
-    try {
-      const product = await this.prismaService.product.findFirst({
-        where: {
-          id,
-        },
-      });
+    const product = await this.prismaService.product.findFirst({
+      where: {
+        id,
+      },
+    });
 
-      return {
-        ...product,
-        image: `https://bucket-natura-s3.s3.amazonaws.com/${product.image}`,
-      };
-    } catch (error) {
-      console.error(error);
-    }
+    return {
+      ...product,
+      image: `https://bucket-natura-s3.s3.amazonaws.com/${product.image}`,
+    };
   }
 }
