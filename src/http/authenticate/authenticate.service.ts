@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
-import AppError from 'src/shared/errors/AppError';
-import { PrismaService } from 'src/database/prisma.service';
-import authConfig from 'src/config/auth';
+import { PrismaService } from '../../database/prisma.service';
+import authConfig from '../../config/auth';
+import AppError from '../../shared/errors/AppError';
 
 export interface AuthProps {
   email: string;

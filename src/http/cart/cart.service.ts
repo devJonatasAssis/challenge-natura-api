@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Cart } from '@prisma/client';
-import { PrismaService } from 'src/database/prisma.service';
-import AppError from 'src/shared/errors/AppError';
+import { PrismaService } from '../../database/prisma.service';
+import AppError from '../../shared/errors/AppError';
+
+interface IFindCartProducts {
+  userId: string;
+}
 
 @Injectable()
 export class CartService {
@@ -23,7 +27,7 @@ export class CartService {
     });
   }
 
-  async findCartProducts(userId: string) {
+  async findCartProducts({ userId }: IFindCartProducts) {
     const [carts, total] = await this.prismaService.$transaction([
       this.prismaService.cart.findMany({
         where: { userId },

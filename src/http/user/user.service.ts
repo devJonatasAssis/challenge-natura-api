@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
-import AppError from 'src/shared/errors/AppError';
+import AppError from '../../shared/errors/AppError';
 
 @Injectable()
 export default class UserService {

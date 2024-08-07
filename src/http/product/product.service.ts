@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Product } from '@prisma/client';
-import { PrismaService } from 'src/database/prisma.service';
-import { HelperUpload } from 'src/shared/helpers';
+import { PrismaService } from '../../database/prisma.service';
+import { HelperUpload } from '../../shared/helpers';
 
 interface IFilterGetProducts {
   name?: string;

@@ -11,7 +11,7 @@ import {
 import { ProductService } from './product.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import upload, { HelperUpload } from 'src/config/upload';
+import upload, { HelperUpload } from '../../config/upload';
 import { Product } from '@prisma/client';
 
 @Controller('products')
