@@ -66,6 +66,8 @@ export class ProductService {
           image: `https://bucket-natura-s3.s3.amazonaws.com/${item.image}`,
         })),
         total,
+        nextCursor:
+          skip + products.length < total ? skip + products.length : undefined,
       };
     } catch (error) {
       console.error(error);
